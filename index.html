@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>$QUIHINOOO — THE WITCH IS ON-CHAIN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Rubik+Mono+One&family=VT323&family=Major+Mono+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --acid: #c6ff00;
+    --hot: #ff00aa;
+    --cyan: #00fff0;
+    --purple: #9d00ff;
+    --bg: #0a0014;
+    --bg-2: #1a0033;
+    --ink: #fff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'VT323', monospace;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* SCANLINE OVERLAY */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0,0,0,0.15) 0px,
+      rgba(0,0,0,0.15) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    pointer-events: none;
+    z-index: 999;
+    mix-blend-mode: multiply;
+  }
+
+  /* NOISE OVERLAY */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+    opacity: 0.08;
+    pointer-events: none;
+    z-index: 998;
+  }
+
+  /* TICKER MARQUEE */
+  .marquee {
+    background: var(--acid);
+    color: #000;
+    font-family: 'Bungee', sans-serif;
+    font-size: 1.4rem;
+    padding: 12px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    border-bottom: 4px solid #000;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 0 var(--hot);
+  }
+  .marquee-track {
+    display: inline-block;
+    animation: scroll 18s linear infinite;
+    padding-left: 100%;
+  }
+  @keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
+  .marquee span { margin: 0 30px; }
+
+  /* HERO */
+  .hero {
+    min-height: 90vh;
+    padding: 60px 20px 80px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(255, 0, 170, 0.3), transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(157, 0, 255, 0.4), transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(0, 255, 240, 0.15), transparent 60%);
+  }
+
+  .hero h1 {
+    font-family: 'Rubik Mono One', sans-serif;
+    font-size: clamp(3rem, 14vw, 11rem);
+    line-height: 0.9;
+    color: var(--acid);
+    text-shadow:
+      4px 0 0 var(--hot),
+      -4px 0 0 var(--cyan),
+      0 0 40px rgba(198, 255, 0, 0.6);
+    animation: glitch 3s infinite;
+    letter-spacing: -0.04em;
+    margin-bottom: 20px;
+    transform: rotate(-2deg);
+  }
+
+  @keyframes glitch {
+    0%, 90%, 100% { transform: rotate(-2deg) translate(0); }
+    92% { transform: rotate(-2deg) translate(-3px, 2px); }
+    94% { transform: rotate(-2deg) translate(3px, -2px); text-shadow: -4px 0 0 var(--hot), 4px 0 0 var(--cyan), 0 0 40px var(--acid); }
+    96% { transform: rotate(-2deg) translate(-2px, -1px); }
+  }
+
+  .hero .tagline {
+    font-family: 'Bungee', sans-serif;
+    font-size: clamp(1rem, 2.5vw, 1.8rem);
+    color: var(--ink);
+    background: var(--hot);
+    padding: 8px 24px;
+    display: inline-block;
+    transform: rotate(1.5deg);
+    margin: 10px 0 30px;
+    border: 3px solid #000;
+    box-shadow: 6px 6px 0 var(--cyan);
+  }
+
+  .hero-gif {
+    width: clamp(180px, 30vw, 320px);
+    height: clamp(180px, 30vw, 320px);
+    border: 6px solid var(--acid);
+    box-shadow:
+      0 0 0 4px #000,
+      0 0 60px var(--hot),
+      12px 12px 0 var(--purple);
+    margin: 30px 0;
+    transform: rotate(-3deg);
+    object-fit: cover;
+    animation: bobble 2.5s ease-in-out infinite;
+  }
+  @keyframes bobble {
+    0%, 100% { transform: rotate(-3deg) translateY(0); }
+    50% { transform: rotate(2deg) translateY(-10px); }
+  }
+
+  .desc {
+    max-width: 700px;
+    font-size: 1.6rem;
+    line-height: 1.4;
+    color: var(--ink);
+    margin: 20px auto;
+    padding: 0 20px;
+  }
+  .desc strong { color: var(--acid); }
+  .desc em { color: var(--hot); font-style: normal; }
+
+  /* CONTRACT BOX */
+  .contract-section {
+    padding: 60px 20px;
+    background:
+      linear-gradient(90deg, var(--purple) 0%, var(--hot) 100%);
+    text-align: center;
+    border-top: 5px solid #000;
+    border-bottom: 5px solid #000;
+    position: relative;
+  }
+  .contract-section h2 {
+    font-family: 'Bungee', sans-serif;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    color: var(--acid);
+    text-shadow: 4px 4px 0 #000;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+  .contract-box {
+    background: #000;
+    color: var(--cyan);
+    font-family: 'Major Mono Display', monospace;
+    font-size: clamp(0.8rem, 2vw, 1.2rem);
+    padding: 20px 30px;
+    border: 4px dashed var(--acid);
+    max-width: 800px;
+    margin: 0 auto;
+    word-break: break-all;
+    cursor: pointer;
+    transition: transform 0.2s;
+    position: relative;
+  }
+  .contract-box:hover {
+    transform: scale(1.02) rotate(-0.5deg);
+  }
+  .contract-box .label {
+    font-family: 'Bungee', sans-serif;
+    color: var(--hot);
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 10px;
+  }
+  .copy-hint {
+    font-family: 'VT323', monospace;
+    color: var(--ink);
+    margin-top: 15px;
+    font-size: 1.2rem;
+  }
+
+  .buy-btn {
+    display: inline-block;
+    margin-top: 30px;
+    font-family: 'Bungee', sans-serif;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    background: var(--acid);
+    color: #000;
+    padding: 20px 50px;
+    text-decoration: none;
+    border: 5px solid #000;
+    box-shadow: 8px 8px 0 var(--cyan), 16px 16px 0 var(--bg);
+    transition: all 0.15s;
+    text-transform: uppercase;
+  }
+  .buy-btn:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 12px 12px 0 var(--cyan), 24px 24px 0 var(--bg);
+  }
+  .buy-btn:active {
+    transform: translate(4px, 4px);
+    box-shadow: 4px 4px 0 var(--cyan), 8px 8px 0 var(--bg);
+  }
+
+  /* MEME GALLERY */
+  .gallery-section {
+    padding: 80px 20px;
+    background: var(--bg-2);
+  }
+  .gallery-section h2 {
+    font-family: 'Rubik Mono One', sans-serif;
+    font-size: clamp(2rem, 8vw, 5rem);
+    color: var(--hot);
+    text-align: center;
+    text-shadow: 6px 6px 0 var(--acid), 12px 12px 0 #000;
+    margin-bottom: 50px;
+    transform: rotate(-1deg);
+    letter-spacing: -0.03em;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .meme {
+    aspect-ratio: 1 / 1;
+    position: relative;
+    overflow: hidden;
+    border: 4px solid var(--acid);
+    background: #000;
+    transition: all 0.25s;
+    cursor: pointer;
+  }
+  .meme:nth-child(3n)   { border-color: var(--hot);    transform: rotate(2deg); }
+  .meme:nth-child(3n+1) { border-color: var(--cyan);   transform: rotate(-1.5deg); }
+  .meme:nth-child(3n+2) { border-color: var(--acid);   transform: rotate(1deg); }
+  .meme:nth-child(5n)   { border-color: var(--purple); }
+
+  .meme:hover {
+    transform: rotate(0deg) scale(1.08);
+    box-shadow: 0 0 40px var(--hot), 0 0 80px var(--cyan);
+    z-index: 5;
+  }
+
+  .meme img, .meme .placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      repeating-linear-gradient(
+        45deg,
+        var(--purple),
+        var(--purple) 10px,
+        var(--bg-2) 10px,
+        var(--bg-2) 20px
+      );
+    color: var(--acid);
+    font-family: 'Bungee', sans-serif;
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 20px;
+    text-shadow: 2px 2px 0 #000;
+  }
+
+  .meme-number {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: #000;
+    color: var(--acid);
+    padding: 4px 10px;
+    font-family: 'Bungee', sans-serif;
+    font-size: 0.9rem;
+    z-index: 2;
+    border: 2px solid var(--acid);
+  }
+
+  /* HOW TO BUY */
+  .howto {
+    padding: 80px 20px;
+    background:
+      radial-gradient(circle at 70% 30%, rgba(198, 255, 0, 0.2), transparent 60%),
+      var(--bg);
+    text-align: center;
+  }
+  .howto h2 {
+    font-family: 'Rubik Mono One', sans-serif;
+    font-size: clamp(2rem, 7vw, 4.5rem);
+    color: var(--acid);
+    text-shadow: 5px 5px 0 var(--hot);
+    margin-bottom: 50px;
+    letter-spacing: -0.03em;
+  }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .step {
+    background: #000;
+    border: 4px solid var(--cyan);
+    padding: 30px 20px;
+    text-align: left;
+    position: relative;
+    transition: transform 0.2s;
+  }
+  .step:hover { transform: translateY(-8px); }
+  .step:nth-child(odd) { transform: rotate(-1deg); }
+  .step:nth-child(even) { transform: rotate(1deg); }
+
+  .step-num {
+    font-family: 'Rubik Mono One', sans-serif;
+    font-size: 4rem;
+    color: var(--hot);
+    line-height: 1;
+    text-shadow: 3px 3px 0 var(--acid);
+  }
+  .step h3 {
+    font-family: 'Bungee', sans-serif;
+    color: var(--acid);
+    font-size: 1.4rem;
+    margin: 10px 0;
+    text-transform: uppercase;
+  }
+  .step p {
+    font-size: 1.3rem;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--acid);
+    color: #000;
+    padding: 40px 20px;
+    text-align: center;
+    border-top: 5px solid #000;
+  }
+  footer .disclaimer {
+    font-family: 'VT323', monospace;
+    font-size: 1.3rem;
+    max-width: 800px;
+    margin: 0 auto 20px;
+    line-height: 1.4;
+  }
+  footer .socials {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 20px 0;
+  }
+  footer .socials a {
+    font-family: 'Bungee', sans-serif;
+    background: #000;
+    color: var(--acid);
+    padding: 12px 24px;
+    text-decoration: none;
+    border: 3px solid #000;
+    box-shadow: 4px 4px 0 var(--hot);
+    transition: all 0.15s;
+    font-size: 1.2rem;
+  }
+  footer .socials a:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--hot);
+  }
+  footer .copyright {
+    font-family: 'Bungee', sans-serif;
+    font-size: 0.9rem;
+    margin-top: 20px;
+    letter-spacing: 0.1em;
+  }
+
+  /* RANDOM FLOATING WORDS */
+  .floater {
+    position: absolute;
+    font-family: 'Bungee', sans-serif;
+    color: var(--acid);
+    opacity: 0.2;
+    pointer-events: none;
+    font-size: clamp(1rem, 3vw, 2rem);
+    animation: float 8s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-30px) rotate(5deg); }
+  }
+
+  @media (max-width: 600px) {
+    .gallery { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .meme { border-width: 3px; }
+    .marquee { font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span>QUE HINOOO!!! 🐊</span>
+    <span>THE WITCH IS ON-CHAIN</span>
+    <span>$QUIHINOOO</span>
+    <span>BRAZIL'S CURSED MEMECOIN</span>
+    <span>QUE HINOOO!!! 🐊</span>
+    <span>NOT FINANCIAL ADVICE</span>
+    <span>SHE BRAIDS HER OWN HAIR</span>
+    <span>$QUIHINOOO</span>
+    <span>QUE HINOOO!!! 🐊</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <span class="floater" style="top:10%; left:5%;">🐊</span>
+  <span class="floater" style="top:20%; right:8%; animation-delay: -2s;">✨</span>
+  <span class="floater" style="bottom:15%; left:10%; animation-delay: -4s;">💀</span>
+  <span class="floater" style="bottom:25%; right:5%; animation-delay: -6s;">🔮</span>
+
+  <h1>QUI<br>HINOOO!</h1>
+  <div class="tagline">THE BLONDE CROCODILE WITCH IS ON SOLANA</div>
+
+  <img src="gifs/cuca-01.gif" alt="Cuca meme" class="hero-gif" />
+
+  <p class="desc">
+    She lives in the swamp. She braids her own hair. She has been watching your portfolio.
+    <br><br>
+    <strong>QUE HINOOO</strong> — Brazil's most cursed icon just slithered out of the lagoon and onto the chain.
+    No roadmap. No promises. <em>Just vibes and vengeance.</em>
+  </p>
+</section>
+
+<!-- CONTRACT -->
+<section class="contract-section">
+  <h2>↓ CONTRACT ADDRESS ↓</h2>
+  <div class="contract-box" onclick="copyCA(this)">
+    <span class="label">CA:</span>
+    <span id="ca">PASTE_YOUR_CONTRACT_ADDRESS_HERE_AFTER_LAUNCH</span>
+  </div>
+  <p class="copy-hint">↑ click to copy ↑</p>
+  <a href="#" class="buy-btn">BUY $QUIHINOOO</a>
+</section>
+
+<!-- MEME GALLERY -->
+<section class="gallery-section">
+  <h2>THE 16 FACES<br>OF CUCA</h2>
+  <div class="gallery" id="gallery">
+    <!-- GIFs injected by JS below -->
+  </div>
+</section>
+
+<!-- HOW TO BUY -->
+<section class="howto">
+  <h2>HOW TO ENTER THE SWAMP</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <h3>Get a Wallet</h3>
+      <p>Download Phantom or Solflare. Fund it with some SOL. Don't tell your mom.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <h3>Copy the CA</h3>
+      <p>Grab the contract address from above. Cuca is watching. Don't paste the wrong one.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <h3>Ape In</h3>
+      <p>Swap your SOL for $QUIHINOOO on pump.fun. Buy as much as you can afford to lose.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <h3>SCREAM</h3>
+      <p>Open your window. Yell "QUE HINOOO" at the moon. The ritual is complete.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="socials">
+    <a href="#">▶ TELEGRAM</a>
+    <a href="#">▶ TWITTER / X</a>
+    <a href="#">▶ PUMP.FUN</a>
+    <a href="#">▶ DEXSCREENER</a>
+  </div>
+  <p class="disclaimer">
+    $QUIHINOOO is a memecoin with no intrinsic value, no roadmap, no team, and no expectation of financial return.
+    This is a joke. Do not invest more than you can afford to lose. Crypto is risky. Cuca is risky-er.
+  </p>
+  <p class="copyright">© THE SWAMP // ALL RIGHTS CURSED</p>
+</footer>
+
+<script>
+  // ===== GIF GALLERY =====
+  // Rename your GIFs to cuca-01.gif through cuca-16.gif
+  // and drop them into the /gifs folder. They'll appear automatically.
+  const gallery = document.getElementById('gallery');
+  for (let i = 1; i <= 16; i++) {
+    const num = String(i).padStart(2, '0');
+    const meme = document.createElement('div');
+    meme.className = 'meme';
+    meme.innerHTML = `
+      <span class="meme-number">#${num}</span>
+      <img src="gifs/cuca-${num}.gif"
+           alt="Cuca meme ${num}"
+           onerror="this.outerHTML='<div class=&quot;placeholder&quot;>DROP<br>cuca-${num}.gif<br>HERE</div>'" />
+    `;
+    gallery.appendChild(meme);
+  }
+
+  // ===== COPY CONTRACT =====
+  function copyCA(box) {
+    const ca = document.getElementById('ca').textContent;
+    navigator.clipboard.writeText(ca).then(() => {
+      const original = box.querySelector('.label').textContent;
+      box.querySelector('.label').textContent = '✓ COPIED!';
+      setTimeout(() => {
+        box.querySelector('.label').textContent = original;
+      }, 1500);
+    });
+  }
+
+  // ===== RANDOM GLITCH =====
+  const h1 = document.querySelector('.hero h1');
+  setInterval(() => {
+    if (Math.random() > 0.95) {
+      h1.style.filter = 'hue-rotate(' + (Math.random() * 360) + 'deg)';
+      setTimeout(() => h1.style.filter = '', 100);
+    }
+  }, 200);
+</script>
+
+</body>
+</html>
